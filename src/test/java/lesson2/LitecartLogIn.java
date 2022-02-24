@@ -33,6 +33,9 @@ public class LitecartLogIn {
         driver.findElement(By.cssSelector(".footer button")).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".fa-sign-out")));
 
+
+
+
         List<WebElement> appearence = (List<WebElement>) ((JavascriptExecutor) driver)
                 .executeScript("return $('.name:contains(Appearence)').click()");
         driver.findElement(By.cssSelector("h1"));
