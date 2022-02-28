@@ -33,9 +33,7 @@ public class CheckDucksStickers {
             int count = sticker_check.size();
             System.out.println(count);
             if (count > 1) {
-                System.out.println(count);
-                System.out.println(single_duck.getText());
-                throw new Exception("Duck has more than 1 sticker");
+                throw new Exception("Duck has more than 1 sticker (" + count + ") " + single_duck.getText());
             } else {
                 System.out.println("sticker is ok for " + single_duck.getText());
             }
