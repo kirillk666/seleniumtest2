@@ -34,6 +34,8 @@ public class CheckDucksStickers {
             System.out.println(count);
             if (count > 1) {
                 throw new Exception("Duck has more than 1 sticker (" + count + ") " + single_duck.getText());
+            } if (count == 0) {
+                throw new NullPointerException("Duck has no stickers " + single_duck.getText());
             } else {
                 System.out.println("sticker is ok for " + single_duck.getText());
             }
