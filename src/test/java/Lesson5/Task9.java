@@ -68,10 +68,10 @@ public class Task9 {
             String[] sorted_zone = new String[sub_zones_count];
 
             for (WebElement single_sub_zone : sub_zones_list) {
-                if (single_sub_zone.isSelected()) {
+//                if (single_sub_zone.isSelected()) {
                     int k = sub_zones_list.indexOf(single_sub_zone);
                     actual_zone[k] = sorted_zone[k] = single_sub_zone.getText();
-                }
+//                }
             }
 
                 Arrays.sort(sorted_zone);
