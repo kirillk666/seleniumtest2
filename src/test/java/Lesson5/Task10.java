@@ -1,41 +1,30 @@
 package Lesson5;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Task10 {
-    private WebDriver driver,driverIE,driverFox;
+    private WebDriver driver;
     private WebDriverWait wait;
 
     @BeforeTest
     public void start() {
         driver = new ChromeDriver();
-//        driverIE = new InternetExplorerDriver();
-//        driverFox = new FirefoxDriver();
-        //todo неявное ожидание
-        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 10);
     }
     @Test
     public void Check() throws Exception {
         driver.get("http://localhost/litecart/en/");
-//        driverIE.get("http://localhost/litecart/en/");
-//        driverFox.get("http://localhost/litecart/en/");
 
         WebElement name_main = driver.findElement(By.cssSelector("#box-campaigns .name"));
 
@@ -121,7 +110,6 @@ public class Task10 {
         }
 
 
-
         if (!name1.equals(name2)) {
             throw new Exception("Names on main and in product are different");
         } else {
@@ -170,7 +158,6 @@ public class Task10 {
         ArrayList<String> dd2 = new ArrayList<>();
         ArrayList<String> dd3 = new ArrayList<>();
         ArrayList<String> dd4 = new ArrayList<>();
-        ArrayList<String> dd5 = new ArrayList<>();
 
         Pattern pat = Pattern.compile("[-]?[0-9]+(.[0-9]+)?");
         Matcher matcher = pat.matcher(regular_price1_color);
@@ -219,7 +206,6 @@ public class Task10 {
         }
 
     }
-    
 
     @AfterTest
     public void stop () {
