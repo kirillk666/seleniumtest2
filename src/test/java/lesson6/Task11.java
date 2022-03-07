@@ -2,6 +2,7 @@ package lesson6;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -20,10 +21,10 @@ public class Task11 {
     @BeforeTest
     public void start() {
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, 10);
+        wait = new WebDriverWait(driver, 100);
     }
     @Test
-    public void Check(){
+    public void Check() {
         driver.get("http://localhost/litecart/en/");
         driver.findElement(By.cssSelector("[name=login_form] td a")).click();
 
@@ -79,9 +80,17 @@ public class Task11 {
         WebElement create_account = driver.findElement(By.cssSelector("[name=create_account]"));
         create_account.click();
 
-//        wait.until(ExpectedConditions.presenceOfElementLocated()
+        try {
+            JavascriptExecutor j = (JavascriptExecutor) driver;
+            if (j.executeScript("return document.readyState").toString().equals("complete")) {
+                System.out.println("Page in ready state");
+            }
+        } catch (Exception exception) {
+            System.out.println("Page not in ready state");
+        }
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#box-account li:nth-child(4)")));
+    }
 
-}
     @AfterTest
     public void stop () {
         driver.quit();
