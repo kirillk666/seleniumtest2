@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -39,6 +40,11 @@ public class Task10 {
         String regular_price1_color = regular_price_main.getCssValue("color");
         String regular_price1_crossed = regular_price_main.getCssValue("text-decoration");
         String regular_price1_font_size = regular_price_main.getCssValue("font-size");
+
+       //todo гораздо более простая реализация поиска цвета, о которой я узнал слишком поздно =)
+        Color priceRegularColor1 = Color.fromString(regular_price1_color);
+        System.out.println(priceRegularColor1.getColor().getRed());
+
 
         Pattern pattern00 = Pattern.compile("[0-9][0-9]");
         Matcher matcher00 = pattern00.matcher(regular_price1_font_size);
