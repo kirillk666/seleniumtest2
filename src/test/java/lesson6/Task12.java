@@ -7,13 +7,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 
 public class Task12 {
     private WebDriver driver;
@@ -26,7 +29,7 @@ public class Task12 {
 //        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
     @Test
-    public void Check() throws InterruptedException {
+    public void Check() {
         driver.get("http://localhost/litecart/admin/login.php");
         driver.findElement(By.cssSelector("input[type=text]")).sendKeys("admin");
         driver.findElement(By.cssSelector("input[type=password]")).sendKeys("admin");
@@ -43,11 +46,15 @@ public class Task12 {
         String random_letters = RandomStringUtils.randomAlphabetic(6);
         String random_numbers = RandomStringUtils.randomNumeric(5);
 
-        List<WebElement> tabs = driver.findElements(By.cssSelector(".tabs li a"));
+        List<WebElement> tabs = driver.findElements(By.cssSelector(".tabs li"));
         for (WebElement single_tab : tabs) {
-            single_tab.click();
-            if (single_tab.getText() == "General") {
+// Если я ставлю в if  "==", то блок if игнорируется и поля не заполняются, если ставлю equals, то получаю ошибку. В чем я не прав?
+            if (single_tab.getText().equals("General")) {
+                System.out.println(single_tab.getText());
+                single_tab.click();
                 List<WebElement> status = driver.findElements(By.cssSelector("label"));
+//                Assert.assertEquals(driver,By.cssSelector("label"));
+                wait.until(ExpectedConditions.elementToBeClickable((By) status));
                 for (WebElement single_status : status) {
                     if (single_status.getAttribute("value") == ("1")) {
                         single_status.click();
@@ -73,11 +80,21 @@ public class Task12 {
 
                 attachFile(driver, By.cssSelector("[type=file]"), "C:\\Tools\\Test12.png");
 
-                //        setDatepicker(driver, "[name=date_valid_from]", "02/20/2002");
+//                //        setDatepicker(driver, "[name=date_valid_from]", "02/20/2002");
+
+                WebElement calendar1 = driver.findElement(By.cssSelector("[name=date_valid_from]"));
+                calendar1.sendKeys("02202002");
+
+                WebElement calendar2 = driver.findElement(By.cssSelector("[name=date_valid_to]"));
+                calendar2.sendKeys("02202022");
             }
 
             if (single_tab.getText() == "Information") {
+                single_tab.click();
+//                wait.until(visibilityOf(driver.findElement(By.cssSelector("[name=manufacturer_id]"))));
+
                 Select manufacturer = new Select(driver.findElement(By.cssSelector("[name=manufacturer_id]")));
+//                Assert.assertEquals(driver,By.cssSelector("[name=manufacturer_id]"));
                 manufacturer.selectByIndex(1);
 
                 WebElement keywords = driver.findElement(By.cssSelector("[name=keywords]"));
@@ -101,41 +118,40 @@ public class Task12 {
             }
 
             if (single_tab.getText() == "Prices") {
+                single_tab.click();
+//                wait.until(visibilityOf(driver.findElement(By.cssSelector("[name=purchase_price]"))));
 
                 WebElement purchase_price = driver.findElement(By.cssSelector("[name=purchase_price]"));
+//                Assert.assertEquals(driver,By.cssSelector("[name=purchase_price]"));
                 purchase_price.click();
                 purchase_price.sendKeys(random_numbers);
 
                 Select currency = new Select(driver.findElement(By.cssSelector("name=purchase_price_currency_code")));
                 currency.selectByIndex(1);
 
-                List<WebElement> short_description = driver.findElements(By.cssSelector(".input-wrapper input"));
-                for (WebElement single_short_description : short_description) {
-                    if (single_short_description.getAttribute("name").equals("prices[USD]")) {
-                        single_short_description.sendKeys(random_numbers);
+                List<WebElement> prices = driver.findElements(By.cssSelector(".input-wrapper input"));
+                for (WebElement single_prices : prices) {
+                    if (single_prices.getAttribute("name").equals("prices[USD]")) {
+                        single_prices.sendKeys(random_numbers);
                     }
-                    if (single_short_description.getAttribute("name").equals("prices[EUR]")) {
-                        single_short_description.sendKeys(random_numbers);
+                    if (single_prices.getAttribute("name").equals("prices[EUR]")) {
+                        single_prices.sendKeys(random_numbers);
                     }
-                    if (single_short_description.getAttribute("name").equals("gross_prices[USD]")) {
-                        single_short_description.sendKeys(random_numbers);
+                    if (single_prices.getAttribute("name").equals("gross_prices[USD]")) {
+                        single_prices.sendKeys(random_numbers);
                     }
-                    if (single_short_description.getAttribute("name").equals("gross_prices[EUR]")) {
-                        single_short_description.sendKeys(random_numbers);
+                    if (single_prices.getAttribute("name").equals("gross_prices[EUR]")) {
+                        single_prices.sendKeys(random_numbers);
                     }
                 }
             }
         }
         WebElement save = driver.findElement(By.cssSelector(".button-set [name=save]"));
         save.click();
-        try {
-            JavascriptExecutor j = (JavascriptExecutor) driver;
-            if (j.executeScript("return document.readyState").toString().equals("complete")) {
-                System.out.println("Page in ready state");
-            }
-        } catch (Exception exception) {
-            System.out.println("Page not in ready state");
-        }
+
+//        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dataTable")));
+//        wait.until(visibilityOf(driver.findElement(By.cssSelector(".dataTable"))));
+
     }
 
 
