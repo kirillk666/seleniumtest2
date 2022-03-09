@@ -21,7 +21,7 @@ public class Task11 {
     @BeforeTest
     public void start() {
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, 100);
+        wait = new WebDriverWait(driver, 10);
     }
     @Test
     public void Check() {
@@ -30,8 +30,9 @@ public class Task11 {
 
         String random_combined = RandomStringUtils.randomAlphanumeric(6);
         String random_letters = RandomStringUtils.randomAlphabetic(6);
+        String low_letters = random_letters.toLowerCase();
         String random_numbers = RandomStringUtils.randomNumeric(5);
-        System.out.println(random_combined);
+        System.out.println(low_letters);
 
         WebElement tax_id = driver.findElement(By.cssSelector("[name=tax_id]"));
         tax_id.sendKeys(random_numbers);
@@ -58,7 +59,7 @@ public class Task11 {
         city.sendKeys(random_letters);
 
         WebElement email = driver.findElement(By.cssSelector("[name=email]"));
-        String email_data = random_combined + "@" + random_letters + ".ru";
+        String email_data = low_letters + "@" + low_letters + ".ru";
         email.sendKeys(email_data);
         System.out.println(email_data);
 
@@ -66,10 +67,10 @@ public class Task11 {
         phone.sendKeys("+1" + random_numbers);
 
         WebElement password = driver.findElement(By.cssSelector("[name=password]"));
-        password.sendKeys(random_combined);
+        password.sendKeys(low_letters);
 
         WebElement confirmed_password = driver.findElement(By.cssSelector("[name=confirmed_password]"));
-        confirmed_password.sendKeys(random_combined);
+        confirmed_password.sendKeys(low_letters);
 
         Select country = new Select(driver.findElement(By.cssSelector("[name=country_code]")));
         country.selectByVisibleText("United States");
@@ -80,15 +81,26 @@ public class Task11 {
         WebElement create_account = driver.findElement(By.cssSelector("[name=create_account]"));
         create_account.click();
 
-        try {
-            JavascriptExecutor j = (JavascriptExecutor) driver;
-            if (j.executeScript("return document.readyState").toString().equals("complete")) {
-                System.out.println("Page in ready state");
-            }
-        } catch (Exception exception) {
-            System.out.println("Page not in ready state");
-        }
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#box-account li:nth-child(4)")));
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#box-account li:nth-child(4) a")));
+        WebElement logout = driver.findElement(By.cssSelector("#box-account li:nth-child(4) a"));
+        logout.click();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[name=email]")));
+        WebElement email_in_login = driver.findElement(By.cssSelector("[name=email]"));
+        email_in_login.clear();
+        email_in_login.sendKeys(email_data);
+
+        WebElement password_in_login = driver.findElement(By.cssSelector("[name=password]"));
+        password_in_login.clear();
+        password_in_login.sendKeys(low_letters);
+
+        WebElement login = driver.findElement(By.cssSelector(".button-set [name=login]"));
+        login.click();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#box-account li:nth-child(4) a")));
+        WebElement logout2 = driver.findElement(By.cssSelector("#box-account li:nth-child(4) a"));
+        logout2.click();
     }
 
     @AfterTest
@@ -97,20 +109,3 @@ public class Task11 {
         driver = null;
     }
 }
-//    Сделайте сценарий для регистрации нового пользователя в учебном приложении litecart (не в админке, а в клиентской части магазина).
-//Logout
-//$$("#box-account li:nth-child(4)")
-
-//        Сценарий должен состоять из следующих частей:
-//
-//        1) регистрация новой учётной записи с достаточно уникальным адресом электронной почты (чтобы не конфликтовало с ранее созданными пользователями, в том числе при предыдущих запусках того же самого сценария),
-//        2) выход (logout), потому что после успешной регистрации автоматически происходит вход,
-//        3) повторный вход в только что созданную учётную запись,
-//        4) и ещё раз выход.
-//
-//        В качестве страны выбирайте United States, штат произвольный. При этом формат индекса -- пять цифр.
-//
-//
-//        Проверки можно никакие не делать, только действия -- заполнение полей, нажатия на кнопки и ссылки. Если сценарий дошёл до конца, то есть созданный пользователь смог выполнить вход и выход -- значит создание прошло успешно.
-//
-//        В форме регистрации есть капча, её нужно отключить в админке учебного приложения на вкладке Settings -> Security.
