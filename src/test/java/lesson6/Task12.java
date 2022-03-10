@@ -17,7 +17,6 @@ import org.testng.annotations.Test;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class Task12 {
@@ -31,7 +30,7 @@ public class Task12 {
 //        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
     @Test
-    public void Check() {
+    public void Check() throws Exception{
         driver.get("http://localhost/litecart/admin/login.php");
         driver.findElement(By.cssSelector("input[type=text]")).sendKeys("admin");
         driver.findElement(By.cssSelector("input[type=password]")).sendKeys("admin");
@@ -40,6 +39,9 @@ public class Task12 {
         List<WebElement> catalog = (List<WebElement>) ((JavascriptExecutor) driver)
                 .executeScript("return $('.name:contains(Catalog)').click()");
         driver.findElement(By.cssSelector("h1"));
+
+        List<WebElement> before_adding = driver.findElements(By.cssSelector("tr .row"));
+        int amount_before_adding = before_adding.size();
 
         WebElement add_new_product = driver.findElement(By.cssSelector("div[style] .button:nth-child(2)"));
         add_new_product.click();
@@ -79,9 +81,9 @@ public class Task12 {
                 quantity.click();
                 quantity.sendKeys(random_numbers);
 
-                String path = "C:\\Tools\\Test12.png";
+                String path = "C:\\Users\\kirienko.k\\Desktop\\AllTestProjects\\SeleniumTrainingBetterBranch\\src\\test\\java\\lesson6\\Test12.png";
                 Path path_absolute = Path.of(path).toAbsolutePath();
-                
+
                 attachFile(driver, By.cssSelector("[type=file]"), path_absolute.toString());
 
 //                //        setDatepicker(driver, "[name=date_valid_from]", "02/20/2002");
@@ -155,6 +157,18 @@ public class Task12 {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dataTable")));
         wait.until(visibilityOf(driver.findElement(By.cssSelector(".dataTable"))));
 
+        List<WebElement> catalog2 = (List<WebElement>) ((JavascriptExecutor) driver)
+                .executeScript("return $('.name:contains(Catalog)').click()");
+        driver.findElement(By.cssSelector("h1"));
+
+        List<WebElement> after_adding = driver.findElements(By.cssSelector("tr .row"));
+        int amount_after_adding = after_adding.size();
+
+        if(amount_before_adding > amount_after_adding){
+            throw new Exception("Catalog element wasn't added");
+        } else {
+            System.out.println("Amount before adding = " + amount_before_adding + "\nAmount after adding = " + amount_after_adding);
+        }
     }
 
 
@@ -177,7 +191,7 @@ public class Task12 {
         input.sendKeys(file);
     }
 
-//    //todo method for calendar
+    //todo method for calendar
 //    public void setDatepicker(WebDriver driver, String cssSelector, String date) {
 //       new WebDriverWait(driver, 30000).until((WebDriver d) -> d.findElement(By.cssSelector(cssSelector)).isDisplayed());
 //       JavascriptExecutor.class.cast(driver).executeScript(String.format("$('{0}').datepicker('setDate', '{1}')", cssSelector, date));
@@ -189,14 +203,3 @@ public class Task12 {
         driver = null;
     }
 }
-//    Сделайте сценарий для добавления нового товара (продукта) в учебном приложении litecart (в админке).
-//
-//        Для добавления товара нужно открыть меню Catalog, в правом верхнем углу нажать кнопку "Add New Product", заполнить поля с информацией о товаре и сохранить.
-//
-//        Достаточно заполнить только информацию на вкладках General, Information и Prices. Скидки (Campaigns) на вкладке Prices можно не добавлять.
-//
-//        Переключение между вкладками происходит не мгновенно, поэтому после переключения можно сделать небольшую паузу (о том, как делать более правильные ожидания, будет рассказано в следующих занятиях).
-//
-//        Картинку с изображением товара нужно уложить в репозиторий вместе с кодом. При этом указывать в коде полный абсолютный путь к файлу плохо, на другой машине работать не будет. Надо средствами языка программирования преобразовать относительный путь в абсолютный.
-//
-//        После сохранения товара нужно убедиться, что он появился в каталоге (в админке). Клиентскую часть магазина можно не проверять.
