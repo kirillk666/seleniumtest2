@@ -14,6 +14,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -48,15 +50,14 @@ public class Task12 {
 
         List<WebElement> tabs = driver.findElements(By.cssSelector(".tabs li"));
         for (WebElement single_tab : tabs) {
-// Если я ставлю в if  "==", то блок if игнорируется и поля не заполняются, если ставлю equals, то получаю ошибку. В чем я не прав?
             if (single_tab.getText().equals("General")) {
                 System.out.println(single_tab.getText());
                 single_tab.click();
-                List<WebElement> status = driver.findElements(By.cssSelector("label"));
+                List<WebElement> status = driver.findElements(By.cssSelector("label input"));
 //                Assert.assertEquals(driver,By.cssSelector("label"));
-                wait.until(ExpectedConditions.elementToBeClickable((By) status));
+                wait.until(ExpectedConditions.visibilityOfAllElements(status));
                 for (WebElement single_status : status) {
-                    if (single_status.getAttribute("value") == ("1")) {
+                    if (single_status.getAttribute("value").equals("1")) {
                         single_status.click();
                     }
                 }
@@ -78,7 +79,10 @@ public class Task12 {
                 quantity.click();
                 quantity.sendKeys(random_numbers);
 
-                attachFile(driver, By.cssSelector("[type=file]"), "C:\\Tools\\Test12.png");
+                String path = "C:\\Tools\\Test12.png";
+                Path path_absolute = Path.of(path).toAbsolutePath();
+                
+                attachFile(driver, By.cssSelector("[type=file]"), path_absolute.toString());
 
 //                //        setDatepicker(driver, "[name=date_valid_from]", "02/20/2002");
 
@@ -89,12 +93,11 @@ public class Task12 {
                 calendar2.sendKeys("02202022");
             }
 
-            if (single_tab.getText() == "Information") {
+            if (single_tab.getText().equals("Information")) {
                 single_tab.click();
-//                wait.until(visibilityOf(driver.findElement(By.cssSelector("[name=manufacturer_id]"))));
-
+                System.out.println(single_tab.getText());
+                wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("[name=manufacturer_id]"))));
                 Select manufacturer = new Select(driver.findElement(By.cssSelector("[name=manufacturer_id]")));
-//                Assert.assertEquals(driver,By.cssSelector("[name=manufacturer_id]"));
                 manufacturer.selectByIndex(1);
 
                 WebElement keywords = driver.findElement(By.cssSelector("[name=keywords]"));
@@ -102,7 +105,7 @@ public class Task12 {
 
                 List<WebElement> short_description = driver.findElements(By.cssSelector(".input-wrapper input"));
                 for (WebElement single_short_description : short_description) {
-                    if (single_short_description.getAttribute("name").equals("name[en]")) {
+                    if (single_short_description.getAttribute("name").equals("short_description[en]")) {
                         single_short_description.sendKeys(random_combined);
                     }
                     if (single_short_description.getAttribute("name").equals("head_title[en]")) {
@@ -113,20 +116,20 @@ public class Task12 {
                     }
                 }
 
-                WebElement description = driver.findElement(By.cssSelector("[name=trumbowyg-editor]"));
+                WebElement description = driver.findElement(By.cssSelector(".trumbowyg-editor"));
                 description.sendKeys(random_combined);
             }
 
-            if (single_tab.getText() == "Prices") {
+            if (single_tab.getText().equals("Prices")) {
                 single_tab.click();
-//                wait.until(visibilityOf(driver.findElement(By.cssSelector("[name=purchase_price]"))));
+                System.out.println(single_tab.getText());
+                wait.until(visibilityOf(driver.findElement(By.cssSelector("[name=purchase_price]"))));
 
                 WebElement purchase_price = driver.findElement(By.cssSelector("[name=purchase_price]"));
-//                Assert.assertEquals(driver,By.cssSelector("[name=purchase_price]"));
-                purchase_price.click();
+                purchase_price.clear();
                 purchase_price.sendKeys(random_numbers);
 
-                Select currency = new Select(driver.findElement(By.cssSelector("name=purchase_price_currency_code")));
+                Select currency = new Select(driver.findElement(By.cssSelector("[name=purchase_price_currency_code]")));
                 currency.selectByIndex(1);
 
                 List<WebElement> prices = driver.findElements(By.cssSelector(".input-wrapper input"));
@@ -149,8 +152,8 @@ public class Task12 {
         WebElement save = driver.findElement(By.cssSelector(".button-set [name=save]"));
         save.click();
 
-//        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dataTable")));
-//        wait.until(visibilityOf(driver.findElement(By.cssSelector(".dataTable"))));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dataTable")));
+        wait.until(visibilityOf(driver.findElement(By.cssSelector(".dataTable"))));
 
     }
 
@@ -174,11 +177,11 @@ public class Task12 {
         input.sendKeys(file);
     }
 
-    //todo method for calendar
-    public void setDatepicker(WebDriver driver, String cssSelector, String date) {
-       new WebDriverWait(driver, 30000).until((WebDriver d) -> d.findElement(By.cssSelector(cssSelector)).isDisplayed());
-       JavascriptExecutor.class.cast(driver).executeScript(String.format("$('{0}').datepicker('setDate', '{1}')", cssSelector, date));
-    }
+//    //todo method for calendar
+//    public void setDatepicker(WebDriver driver, String cssSelector, String date) {
+//       new WebDriverWait(driver, 30000).until((WebDriver d) -> d.findElement(By.cssSelector(cssSelector)).isDisplayed());
+//       JavascriptExecutor.class.cast(driver).executeScript(String.format("$('{0}').datepicker('setDate', '{1}')", cssSelector, date));
+//    }
 
     @AfterTest
     public void stop () {
@@ -190,7 +193,7 @@ public class Task12 {
 //
 //        Для добавления товара нужно открыть меню Catalog, в правом верхнем углу нажать кнопку "Add New Product", заполнить поля с информацией о товаре и сохранить.
 //
-//        Достаточно заполнить только информацию на вкладках General, Information и Prices. Скидки (Campains) на вкладке Prices можно не добавлять.
+//        Достаточно заполнить только информацию на вкладках General, Information и Prices. Скидки (Campaigns) на вкладке Prices можно не добавлять.
 //
 //        Переключение между вкладками происходит не мгновенно, поэтому после переключения можно сделать небольшую паузу (о том, как делать более правильные ожидания, будет рассказано в следующих занятиях).
 //
