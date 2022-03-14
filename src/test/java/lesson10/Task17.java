@@ -1,7 +1,10 @@
 package lesson10;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.testng.annotations.AfterTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.util.List;
+import java.util.logging.Level;
 
 
 public class Task17 {
@@ -19,7 +23,11 @@ public class Task17 {
 
     @BeforeTest
     public void start() {
-        driver = new ChromeDriver();
+        LoggingPreferences prefs = new LoggingPreferences();
+        prefs.enable("browser", Level.ALL);
+        ChromeOptions options = new ChromeOptions();
+        options.setCapability(CapabilityType.LOGGING_PREFS, prefs);
+        driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
     }
 
@@ -36,7 +44,7 @@ public class Task17 {
             System.out.println(l);
         }
 
-        List<WebElement> catalog = (List<WebElement>) ((JavascriptExecutor) driver)
+       ((JavascriptExecutor) driver)
                 .executeScript("return $('.name:contains(Catalog)').click()");
         WebElement main_header = driver.findElement(By.cssSelector("h1"));
         String main_header_str = main_header.getText();

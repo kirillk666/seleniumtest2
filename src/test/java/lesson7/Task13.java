@@ -28,19 +28,19 @@ public class Task13 {
         public void Check() {
             driver.get("http://localhost/litecart/en/");
 
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[name=email]")));
-            WebElement email_in_login = driver.findElement(By.cssSelector("[name=email]"));
-            email_in_login.clear();
-            email_in_login.sendKeys("otzxei@otzxei.ru");
-
-            WebElement password_in_login = driver.findElement(By.cssSelector("[name=password]"));
-            password_in_login.clear();
-            password_in_login.sendKeys("otzxei");
-
-            WebElement login = driver.findElement(By.cssSelector(".button-set [name=login]"));
-            login.click();
-
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#box-account li:nth-child(4) a")));
+//            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[name=email]")));
+//            WebElement email_in_login = driver.findElement(By.cssSelector("[name=email]"));
+//            email_in_login.clear();
+//            email_in_login.sendKeys("otzxei@otzxei.ru");
+//
+//            WebElement password_in_login = driver.findElement(By.cssSelector("[name=password]"));
+//            password_in_login.clear();
+//            password_in_login.sendKeys("otzxei");
+//
+//            WebElement login = driver.findElement(By.cssSelector(".button-set [name=login]"));
+//            login.click();
+//
+//            wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#box-account li:nth-child(4) a")));
 
             int count_clicks = 3;
             for (int i = 0; i < count_clicks; i++) {
@@ -72,7 +72,7 @@ public class Task13 {
                 String string_total_sum = total_sum.toString();
                 System.out.println("Total sum of products in cart = " + total_sum);
 
-                WebElement add = driver.findElement(By.cssSelector("[type=submit]"));
+                WebElement add = driver.findElement(By.cssSelector("[name=add_cart_product]"));
                 add.click();
 
                 wait.until(ExpectedConditions.textToBe(By.cssSelector("#cart .content .quantity"), string_total_sum));

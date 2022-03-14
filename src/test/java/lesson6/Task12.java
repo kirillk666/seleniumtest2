@@ -36,7 +36,7 @@ public class Task12 {
         driver.findElement(By.cssSelector("input[type=password]")).sendKeys("admin");
         driver.findElement(By.cssSelector(".footer button")).click();
 
-        List<WebElement> catalog = (List<WebElement>) ((JavascriptExecutor) driver)
+        ((JavascriptExecutor) driver)
                 .executeScript("return $('.name:contains(Catalog)').click()");
         driver.findElement(By.cssSelector("h1"));
 
@@ -81,7 +81,7 @@ public class Task12 {
                 quantity.click();
                 quantity.sendKeys(random_numbers);
 
-                String path = "C:\\Users\\kirienko.k\\Desktop\\AllTestProjects\\SeleniumTrainingBetterBranch\\src\\test\\java\\lesson6\\Test12.png";
+                String path = "src\\test\\java\\lesson6\\Test12.png";
                 Path path_absolute = Path.of(path).toAbsolutePath();
 
                 attachFile(driver, By.cssSelector("[type=file]"), path_absolute.toString());
@@ -157,7 +157,7 @@ public class Task12 {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dataTable")));
         wait.until(visibilityOf(driver.findElement(By.cssSelector(".dataTable"))));
 
-        List<WebElement> catalog2 = (List<WebElement>) ((JavascriptExecutor) driver)
+        ((JavascriptExecutor) driver)
                 .executeScript("return $('.name:contains(Catalog)').click()");
         driver.findElement(By.cssSelector("h1"));
 
